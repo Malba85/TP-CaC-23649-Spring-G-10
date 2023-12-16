@@ -1,0 +1,16 @@
+com\ar\cac\homebanking\controllers\TransferControllerTest.class
+com\ar\cac\homebanking\controllers\AccountControllerTest.class
+com\ar\cac\homebanking\models\UserTest.class
+com\ar\cac\homebanking\models\dtos\UserDTOTest.class
+com\ar\cac\homebanking\models\TransferTest.class
+com\ar\cac\homebanking\services\TransferServiceTest.class
+com\ar\cac\homebanking\models\dtos\AccountDTOTest.class
+com\ar\cac\homebanking\services\UserServiceTest.class
+com\ar\cac\homebanking\mappers\UserMapperTest.class
+com\ar\cac\homebanking\controllers\UserControllerTest.class
+com\ar\cac\homebanking\mappers\TransferMapperTest.class
+com\ar\cac\homebanking\models\AccountTest.class
+com\ar\cac\homebanking\services\AccountServiceTest.class
+com\ar\cac\homebanking\models\dtos\TransferDTOTest.class
+com\ar\cac\homebanking\HomebankingApplicationTests.class
+com\ar\cac\homebanking\mappers\AccountMapperTest.class
