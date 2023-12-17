@@ -15,7 +15,6 @@ public class LoanMapper {
                 .duration(dto.getDuration())
                 .status(dto.getStatus())
                 .user(dto.getUserId() != null ? User.builder().id(dto.getUserId()).build() : null)
-                // Otros atributos que necesites mapear
                 .build();
     }
 
@@ -27,7 +26,6 @@ public class LoanMapper {
                 .duration(loan.getDuration())
                 .status(loan.getStatus())
                 .userId(loan.getUser() != null ? loan.getUser().getId() : null)
-                // Otros atributos que necesites mapear
                 .build();
     }
 }

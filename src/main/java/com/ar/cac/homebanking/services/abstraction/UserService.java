@@ -1,5 +1,8 @@
 package com.ar.cac.homebanking.services.abstraction;
 
+import com.ar.cac.homebanking.exceptions.NoUsersFoundException;
+import com.ar.cac.homebanking.exceptions.UserAlreadyExistsException;
+import com.ar.cac.homebanking.exceptions.UserNotFoundException;
 import com.ar.cac.homebanking.models.User;
 import com.ar.cac.homebanking.models.dtos.UserDTO;
 import org.springframework.stereotype.Service;
@@ -10,14 +13,15 @@ import java.util.Optional;
 @Service
 public interface UserService {
 
-    Optional<UserDTO> createUser (UserDTO userDTO);
+    Optional<UserDTO> createUser(UserDTO userDTO) throws UserAlreadyExistsException;
 
-    Optional<UserDTO> getUserById (Long id);
+    Optional<UserDTO> getUserById(Long id) throws UserNotFoundException;
 
-    Optional<List<UserDTO>> getUsers ();
-    String deleteUser (Long id);
+    Optional<List<UserDTO>> getUsers() throws NoUsersFoundException;;
 
-    Optional<UserDTO> updateUser (Long id, UserDTO userDto);
+    String deleteUser(Long id) throws UserNotFoundException;
 
-    User validateUserByEmail(UserDTO dto);
+    Optional<UserDTO> updateUser(Long id, UserDTO userDto) throws UserNotFoundException;
+
+    User validateUserByEmail(UserDTO dto) throws UserNotFoundException;
 }

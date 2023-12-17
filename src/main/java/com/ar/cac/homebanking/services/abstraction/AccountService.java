@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public interface AccountService {
 
-    Optional<AccountDTO> createAccount (AccountDTO accountDTO);
+    Optional<AccountDTO> createAccount(AccountDTO accountDTO);
 
     Optional<AccountDTO> getAccountById (Long id);
 

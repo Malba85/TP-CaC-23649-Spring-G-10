@@ -1,8 +1,11 @@
 com\ar\cac\homebanking\services\abstraction\UserService.class
+com\ar\cac\homebanking\services\implementation\UserServiceImp.class
+com\ar\cac\homebanking\exceptions\NoUsersFoundException.class
 com\ar\cac\homebanking\services\implementation\LoanServiceImp.class
+com\ar\cac\homebanking\exceptions\UserAlreadyExistsException.class
 com\ar\cac\homebanking\services\abstraction\LoanService.class
 com\ar\cac\homebanking\services\abstraction\TransferService.class
 com\ar\cac\homebanking\services\abstraction\AccountService.class
 com\ar\cac\homebanking\services\implementation\AccountServiceImp.class
-com\ar\cac\homebanking\services\implementation\UserServiceImp.class
 com\ar\cac\homebanking\services\implementation\TransferServiceImp.class
+com\ar\cac\homebanking\exceptions\UserNotFoundException.class

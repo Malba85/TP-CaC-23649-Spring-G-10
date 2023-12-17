@@ -7,8 +7,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class UserMapper {
 
-    // Metodos para transformar objetos
-
     public static User dtoToUser(UserDTO dto){
         User user = new User();
         user.setName(dto.getName());

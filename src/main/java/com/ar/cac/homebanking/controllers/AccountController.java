@@ -1,6 +1,7 @@
 package com.ar.cac.homebanking.controllers;
 
 import com.ar.cac.homebanking.models.dtos.AccountDTO;
+import com.ar.cac.homebanking.services.abstraction.AccountService;
 import com.ar.cac.homebanking.services.implementation.AccountServiceImp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,16 @@ import java.util.Optional;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private final AccountServiceImp service;
+    private final AccountService accountService;
 
     public AccountController(AccountServiceImp service){
-        this.service = service;
+        this.accountService = service;
+
     }
 
     @GetMapping
     public ResponseEntity<List<AccountDTO>> getAccounts(){
-        Optional<List<AccountDTO>> accountListOptional = service.getAccounts();
+        Optional<List<AccountDTO>> accountListOptional = accountService.getAccounts();
 
         if(accountListOptional.isPresent()){
             List<AccountDTO> accountList = accountListOptional.get();
@@ -33,28 +35,33 @@ public class AccountController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<AccountDTO> getAccount(@PathVariable Long id){
-        return service.getAccountById(id).map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+        return accountService.getAccountById(id).map(t -> new ResponseEntity<>(t, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
                 //ResponseEntity.status(HttpStatus.OK).body(service.getAccountById(id));
     }
 
     @PostMapping
-    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO dto){
-        return service.createAccount(dto).map(t -> new ResponseEntity<>(t, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
-        //ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(dto));
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO dto) {
+        Long userId = dto.getUserId(); // Obtener el ID del usuario desde el DTO de la cuenta
+
+        // Crear la cuenta y asignarla al usuario con el ID proporcionado
+        Optional<AccountDTO> createdAccount = accountService.createAccount(dto);
+
+        return createdAccount
+                .map(account -> new ResponseEntity<>(account, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO dto){
-        return service.updateAccount(id, dto).map(t -> new ResponseEntity<>(t, HttpStatus.ACCEPTED))
+        return accountService.updateAccount(id, dto).map(t -> new ResponseEntity<>(t, HttpStatus.ACCEPTED))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         //ResponseEntity.status(HttpStatus.OK).body(service.updateAccount(id, dto));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
-        return new ResponseEntity<>(service.deleteAccount(id), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.deleteAccount(id), HttpStatus.OK);
         //ResponseEntity.status(HttpStatus.OK).body(service.deleteAccount(id));
     }
 }

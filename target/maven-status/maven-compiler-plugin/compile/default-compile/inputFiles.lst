@@ -1,3 +1,4 @@
+C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\NoUsersFoundException.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\services\implementation\UserServiceImp.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\mappers\AccountMapper.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\TransferNotFoundException.java
@@ -12,11 +13,12 @@ C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\services\abstraction\AccountService.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\controllers\UserController.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\AccountNotFoundException.java
+C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\UserAlreadyExistsException.java
+C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\UserNotFoundException.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\models\dtos\LoanDTO.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\services\implementation\TransferServiceImp.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\mappers\UserMapper.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\mappers\LoanMapper.java
-C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\exceptions\UserNotExistsException.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\models\dtos\AccountDTO.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\HomebankingApplication.java
 C:\FRANCO\001-CaC\CodoaCodo\SPRING\TP-FINAL\tp-CaC-23649-spring-grupo-10-feature-refactor-y-feature\src\main\java\com\ar\cac\homebanking\repositories\UserRepository.java

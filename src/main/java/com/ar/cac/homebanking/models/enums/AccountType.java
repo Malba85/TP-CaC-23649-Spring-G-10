@@ -1,5 +1,8 @@
 package com.ar.cac.homebanking.models.enums;
 
 public enum AccountType {
-    SAVINGS_BANK, DOLLAR_SAVINGS_BANK, SAVING_ACCOUNT
+    CERTIFICATE_OF_DEPOSIT_$USD,
+    CERTIFICATE_OF_DEPOSIT_$ARS,
+    SAVING_ACCOUNT_$USD,
+    SAVING_ACCOUNT_$ARS
 }

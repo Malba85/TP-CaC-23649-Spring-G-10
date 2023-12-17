@@ -1,12 +1,15 @@
 package com.ar.cac.homebanking.services.implementation;
 
 import com.ar.cac.homebanking.exceptions.AccountNotFoundException;
-import com.ar.cac.homebanking.exceptions.UserNotExistsException;
+import com.ar.cac.homebanking.exceptions.UserNotFoundException;
 import com.ar.cac.homebanking.mappers.AccountMapper;
 import com.ar.cac.homebanking.models.Account;
+import com.ar.cac.homebanking.models.User;
 import com.ar.cac.homebanking.models.dtos.AccountDTO;
 import com.ar.cac.homebanking.repositories.AccountRepository;
+import com.ar.cac.homebanking.repositories.UserRepository;
 import com.ar.cac.homebanking.services.abstraction.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,13 +21,14 @@ import java.util.stream.Collectors;
 public class AccountServiceImp implements AccountService {
 
     private final AccountRepository repository;
+    private final UserRepository userRepository;
 
-
-
-    public AccountServiceImp(AccountRepository repository){
+    @Autowired
+    public AccountServiceImp(UserRepository userRepository, AccountRepository repository) {
         this.repository = repository;
-
+        this.userRepository = userRepository;
     }
+
     public Optional<List<AccountDTO>> getAccounts() {
         List<Account> accounts = repository.findAll();
         return Optional.of( accounts.stream()
@@ -35,13 +39,30 @@ public class AccountServiceImp implements AccountService {
                 .collect(Collectors.toList());*/
     }
 
+    @Override
     public Optional<AccountDTO> createAccount(AccountDTO dto) {
-        // TODO: REFACTOR
-        //dto.setType(AccountType.SAVINGS_BANK);
-        dto.setAmount(BigDecimal.ZERO);
-        Account newAccount = repository.save(AccountMapper.dtoToAccount(dto));
-        return Optional.of(AccountMapper.accountToDto(newAccount));
+        if (dto.getUserId() != null) {
+            Optional<User> optionalUser = userRepository.findById(dto.getUserId());
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                Account newAccount = new Account();
+                newAccount.setType(dto.getType());
+                newAccount.setCbu(dto.getCbu());
+                newAccount.setAlias(dto.getAlias());
+                newAccount.setAmount(BigDecimal.ZERO); // Inicializar con 0
+                newAccount.setOwner(user); // Establecer la relación con el usuario
+
+                Account savedAccount = repository.save(newAccount);
+                return Optional.of(AccountMapper.accountToDto(savedAccount));
+            } else {
+                throw new UserNotFoundException("Usuario no encontrado con ID: " + dto.getUserId());
+            }
+        } else {
+            throw new IllegalArgumentException("El ID de usuario (userId) no puede ser nulo");
+        }
     }
+
 
     public Optional<AccountDTO> getAccountById(Long id) {
         return repository.findById(id).map(AccountMapper::accountToDto);
@@ -55,8 +76,7 @@ public class AccountServiceImp implements AccountService {
             repository.deleteById(id);
             return "La cuenta con id: " + id + " ha sido eliminada";
         } else {
-            // TODO: REFACTOR create new exception
-            throw new UserNotExistsException("La cuenta a eliminar no existe");
+            throw new UserNotFoundException("La cuenta a eliminar no existe");
         }
 
     }
@@ -66,6 +86,7 @@ public class AccountServiceImp implements AccountService {
         if (accountOptional.isPresent()) {
             Account existingAccount = accountOptional.get();
 
+            // Actualizar solo los campos que se proporcionan en el DTO
             if (dto.getAlias() != null) {
                 existingAccount.setAlias(dto.getAlias());
             }
@@ -82,7 +103,10 @@ public class AccountServiceImp implements AccountService {
                 existingAccount.setAmount(dto.getAmount());
             }
 
+            // Guardar la cuenta actualizada en la base de datos
             Account updatedAccount = repository.save(existingAccount);
+
+            // Devolver DTO correspondiente a la cuenta actualizada
             return Optional.ofNullable(AccountMapper.accountToDto(updatedAccount));
         } else {
             throw new AccountNotFoundException("Account not found with id: " + id);

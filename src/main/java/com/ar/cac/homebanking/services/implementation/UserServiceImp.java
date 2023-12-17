@@ -1,6 +1,8 @@
 package com.ar.cac.homebanking.services.implementation;
 
-import com.ar.cac.homebanking.exceptions.UserNotExistsException;
+import com.ar.cac.homebanking.exceptions.NoUsersFoundException;
+import com.ar.cac.homebanking.exceptions.UserAlreadyExistsException;
+import com.ar.cac.homebanking.exceptions.UserNotFoundException;
 import com.ar.cac.homebanking.mappers.UserMapper;
 import com.ar.cac.homebanking.models.User;
 import com.ar.cac.homebanking.models.dtos.UserDTO;
@@ -9,98 +11,89 @@ import com.ar.cac.homebanking.services.abstraction.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
-    // Inyectar una instancia del Repositorio
+
     @Autowired
     private UserRepository repository;
 
-    // Metodos
-
-    public Optional<List<UserDTO>> getUsers(){
-        // Obtengo la lista de la entidad usuario de la db
+    @Override
+    public Optional<List<UserDTO>> getUsers() throws NoUsersFoundException {
         List<User> users = repository.findAll();
-        // Mapear cada usuario de la lista hacia un dto
-        return Optional.of(users.stream()
-                .map(UserMapper::userToDto)
-                .collect(Collectors.toList()));
-    }
-
-    public Optional<UserDTO> createUser(UserDTO userDto){
-        if(validateUserByEmail(userDto) == null){
-            return Optional.of(UserMapper.userToDto(repository
-                    .save(UserMapper.dtoToUser(userDto))));
+        if (users.isEmpty()) {
+            throw new NoUsersFoundException("No se encontraron usuarios en la base de datos.");
         }
-        else {
-            throw new UserNotExistsException("Usuario con mail: " + userDto.getEmail() + " ya existe");
-        }
-
-        /*User userValidated = validateUserByEmail(userDto);
-        if (userValidated == null){
-            User userSaved = repository.save(UserMapper.dtoToUser(userDto));
-            return UserMapper.userToDto(userSaved);
-        } else{
-            throw new UserNotExistsException("Usuario con mail: " + userDto.getEmail() + " ya existe");
-        }*/
-
+        return Optional.of(users.stream().map(UserMapper::userToDto).collect(Collectors.toList()));
     }
 
-
-    public Optional<UserDTO> getUserById(Long id) {
-        return repository.findById(id).map(UserMapper::userToDto);
-    }
-
-    public String deleteUser(Long id){
-        if (repository.existsById(id)){
-            repository.deleteById(id);
-            return "El usuario con id: " + id + " ha sido eliminado";
+    @Override
+    public Optional<UserDTO> createUser(UserDTO userDto) throws UserAlreadyExistsException {
+        if (validateUserByEmail(userDto) == null) {
+            User user = UserMapper.dtoToUser(userDto);
+            User savedUser = repository.save(user);
+            return Optional.of(UserMapper.userToDto(savedUser));
         } else {
-            throw new UserNotExistsException("El usuario a eliminar elegido no existe");
+            throw new UserAlreadyExistsException("Usuario con mail: " + userDto.getEmail() + " ya existe");
         }
-
     }
 
-    public Optional<UserDTO> updateUser(Long id, UserDTO dto) {
-        if (repository.existsById(id)){
-            User userToModify = repository.findById(id).get();
-            // Validar qué datos no vienen en null para setearlos al objeto ya creado
-
-            // Logica del Patch
-            if (dto.getName() != null){
-                userToModify.setName(dto.getName());
-            }
-
-            if (dto.getSurname() != null){
-                userToModify.setSurname(dto.getSurname());
-            }
-
-            if (dto.getEmail() != null){
-                userToModify.setEmail(dto.getEmail());
-            }
-
-            if (dto.getPassword() != null){
-                userToModify.setPassword(dto.getPassword());
-            }
-
-            if (dto.getDni() != null){
-                userToModify.setDni(dto.getDni());
-            }
-
-            User userModified = repository.save(userToModify);
-
-            return Optional.of(UserMapper.userToDto(userModified));
-        }
-
-        return Optional.of(new UserDTO());
+    @Override
+    public Optional<UserDTO> getUserById(Long id) throws UserNotFoundException {
+        User user = repository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("Usuario con ID: " + id + " no encontrado"));
+        return Optional.of(UserMapper.userToDto(user));
     }
 
-    // Validar que existan usuarios unicos por mail
-    public User validateUserByEmail(UserDTO dto){
+    @Override
+    public String deleteUser(Long id) throws UserNotFoundException {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return "El usuario con ID: " + id + " ha sido eliminado";
+        } else {
+            throw new UserNotFoundException("El usuario a eliminar con ID: " + id + " no existe");
+        }
+    }
+
+    @Override
+    public Optional<UserDTO> updateUser(Long id, UserDTO dto) throws UserNotFoundException {
+        Optional<User> optionalUser = repository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User userToUpdate = optionalUser.get();
+
+            // Verificar si los campos del DTO son no nulos y actualizar los correspondientes en el usuario existente
+            if (dto.getName() != null) {
+                userToUpdate.setName(dto.getName());
+            }
+            if (dto.getSurname() != null) {
+                userToUpdate.setSurname(dto.getSurname());
+            }
+            if (dto.getEmail() != null) {
+                userToUpdate.setEmail(dto.getEmail());
+            }
+            if (dto.getPassword() != null) {
+                userToUpdate.setPassword(dto.getPassword());
+            }
+            if (dto.getDni() != null) {
+                userToUpdate.setDni(dto.getDni());
+            }
+
+            // Guardar el usuario actualizado en la base de datos
+            User updatedUser = repository.save(userToUpdate);
+
+            return Optional.of(UserMapper.userToDto(updatedUser));
+        } else {
+            throw new UserNotFoundException("Usuario con ID: " + id + " no encontrado");
+        }
+    }
+
+    @Override
+    public User validateUserByEmail(UserDTO dto) {
         return repository.findByEmail(dto.getEmail());
     }
 }
+
