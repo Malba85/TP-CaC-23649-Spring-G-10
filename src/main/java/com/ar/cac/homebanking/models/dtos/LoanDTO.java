@@ -17,7 +17,4 @@ public class LoanDTO {
     private LoanStatus status;
     private Long userId;
 
-    // Otros atributos que necesitemos
-
-    // Constructores, getters y setters según sea necesario
 }

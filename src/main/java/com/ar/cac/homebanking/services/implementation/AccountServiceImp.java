@@ -1,5 +1,6 @@
 package com.ar.cac.homebanking.services.implementation;
 
+import com.ar.cac.homebanking.exceptions.AccountNotFoundException;
 import com.ar.cac.homebanking.exceptions.UserNotExistsException;
 import com.ar.cac.homebanking.mappers.AccountMapper;
 import com.ar.cac.homebanking.models.Account;
@@ -61,6 +62,36 @@ public class AccountServiceImp implements AccountService {
     }
 
     public Optional<AccountDTO> updateAccount(Long id, AccountDTO dto) {
+        Optional<Account> accountOptional = repository.findById(id);
+        if (accountOptional.isPresent()) {
+            Account existingAccount = accountOptional.get();
+
+            if (dto.getAlias() != null) {
+                existingAccount.setAlias(dto.getAlias());
+            }
+
+            if (dto.getType() != null) {
+                existingAccount.setType(dto.getType());
+            }
+
+            if (dto.getCbu() != null) {
+                existingAccount.setCbu(dto.getCbu());
+            }
+
+            if (dto.getAmount() != null) {
+                existingAccount.setAmount(dto.getAmount());
+            }
+
+            Account updatedAccount = repository.save(existingAccount);
+            return Optional.ofNullable(AccountMapper.accountToDto(updatedAccount));
+        } else {
+            throw new AccountNotFoundException("Account not found with id: " + id);
+        }
+    }
+    /*
+
+    ------------------------------------------
+    public Optional<AccountDTO> updateAccount(Long id, AccountDTO dto) {
         if (repository.existsById(id)) {
             Account accountToModify = repository.findById(id).get();
             // Validar qué datos no vienen en null para setearlos al objeto ya creado
@@ -90,4 +121,6 @@ public class AccountServiceImp implements AccountService {
         }
         return Optional.of(new AccountDTO());
     }
+
+     */
 }
